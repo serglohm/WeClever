@@ -69,6 +69,8 @@ Page {
         indicator.running = false;
         for(var i = 0; i < data.length; i++){
             listModel.append(data[i]);
+
+            console.log(Code.obj2json(data[i]));
         }
     }
 
