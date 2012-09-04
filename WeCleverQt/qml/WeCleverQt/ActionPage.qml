@@ -11,6 +11,7 @@ Page {
     id: actionPage
     property int actionId: 0
     property variant actionPacket: []
+    property bool initialized: false
 
     Rectangle{
         anchors.fill: parent
@@ -153,24 +154,23 @@ Page {
         for (var i = 0; i < data[0].packet.length; i++){
             console.log(data[0].packet[i]);
             var coords = data[0].packet[i].coords.split(',');
-            packet[i].lng = coords[0];
-            packet[i].lat = coords[1];
-            tempArray.push(data[0].packet[i]);
+            print("data[0].packet[" + i + "] = " + data[0].packet[i] );
+            print("coords = " + coords);
+//            packet[i].lng = coords[0];
+//            packet[i].lat = coords[1];
+            tempArray.push(coords);//data[0].packet[i]
         }
         actionPacket = tempArray;
-
-
-
     }
 
     onStatusChanged: {
-        if(status == 2){
+        if(status == 2 && !initialized){
+            initialized = true;
             var url = Engine.getUrlStart() + "/iphone_app/AppDataActions/" + actionId + "/"
             console.log(url);
             Code.getJSON(url, getActionCallback);
             indicator.visible = true;
             indicator.running = true;
-
         }
     }
 

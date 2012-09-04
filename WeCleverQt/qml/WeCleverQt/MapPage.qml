@@ -11,6 +11,23 @@ Page {
     id: actionPage
     property int actionId: 0
     property variant actionPacket: []
+    Component.onCompleted: {
+        print("Component.onCompleted actionPacket.length = " + actionPacket.length)
+        if (actionPacket.length > 0) {
+            print("actionPacket.length > 0")
+            mapCenter.longitude = actionPacket[0][0];
+            mapCenter.latitude = actionPacket[0][1];
+            print("center lat = " + mapCenter.latitude +
+                  " lon = " + mapCenter.longitude)
+        }
+
+        for (var i = 0; i < actionPacket.length; ++i) {
+            mapImagesModel.append({lat: actionPacket[i][0], lng: actionPacket[i][1]})
+        }
+    }
+    ListModel {
+        id: mapImagesModel
+    }
 
     Rectangle{
         anchors.fill: parent
@@ -46,12 +63,16 @@ Page {
                 MapGroup {
                     id: mapIcons
                     Repeater{
-                        model: actionPacket
+                        model: mapImagesModel
                         MapImage {
                             source: "mapIcon.png"
                             coordinate: Coordinate {latitude: lat; longitude: lng}
                         }
                     }
+                }
+
+                Coordinate {
+                    id: mapCenter
                 }
 
                 Map {
@@ -60,10 +81,11 @@ Page {
                        name : "nokia"
                    }
                    size.width: parent.width
-                   anchors.top: descriptionText.bottom
+                   anchors.top: parent.top//descriptionText.bottom
                    height: 200
-                   zoomLevel: 6
-                   center: Coordinate {latitude: 53; longitude: 12}
+                   zoomLevel: 12
+                   center: mapCenter
+                   //center: Coordinate {latitude: 53; longitude: 12}
                 }
                 MouseArea {
                     id: mousearea
@@ -73,7 +95,7 @@ Page {
                     property int __lastY: -1
 
                     width: parent.width
-                    anchors.top: descriptionText.bottom
+                    anchors.top: parent.top//descriptionText.bottom
                     height: 200
 
 
@@ -122,13 +144,19 @@ Page {
     onStatusChanged: {
         if(status == 2){
             console.log('----------------------------------');
+            print("onStatusChanged actionPacket.length = " + actionPacket.length)
             for(var i = 0; i < actionPacket.length; i++){
                 console.log(Code.obj2json(actionPacket[i]));
+                mapImagesModel.append({lat: actionPacket[i][0], lng: actionPacket[i][1]})
+            }
+            if (actionPacket.length > 0) {
+                print("actionPacket.length > 0")
+                mapCenter.longitude = actionPacket[0][0];
+                mapCenter.latitude = actionPacket[0][1];
+                print("center lat = " + mapCenter.latitude +
+                      " lon = " + mapCenter.longitude)
             }
             console.log('----------------------------------');
-
-            //mapIcons.
-
             mapId.addMapObject(mapIcons);
         }
     }
