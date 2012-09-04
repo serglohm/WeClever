@@ -16,27 +16,46 @@ Page {
     Component{
         id: delegate
         Rectangle{
-            height: actImage.height + actLabelText.height + 30
+            height: 170 * 162 / 300 + labelText.height + 20
             width: parent.width
-            radius: 10
+            color: "#8BB44E"
             Text{
-              id: actLabelText
-              anchors.right: parent.right
-              anchors.left: parent.left
-              anchors.top: parent.top
-              anchors.margins: 10
-              color: '#000'
-              wrapMode: Text.WordWrap
-              text: act_name
+                id: labelText
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                width: parent.width
+                color: '#fff'
+                wrapMode: Text.WordWrap
+                anchors.margins: 10
+                horizontalAlignment: Text.AlignHCenter
+                text: act_name
             }
-            Image{
-                id: actImage
-                width: 300
-                height: 162
-                source: act_image
-                anchors.horizontalCenter: parent.horizontalCenter
-                y: actLabelText.height + 20
 
+            Rectangle{
+                color: "#63A304"
+                width: parent.width - 170
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: 170 * 162 / 300
+                Text{
+                    id: cntText
+                    anchors.centerIn: parent
+                    color: '#fff'
+                    font.pixelSize: 40
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    text: packet.get(0).discountprice + ' руб.'
+                }
+            }
+            Image {
+                id: catImage
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                width: 170
+                height: 170 * 162 / 300
+                fillMode: Image.PreserveAspectFit
+                source: act_image
             }
             MouseArea{
                 anchors.fill: parent
@@ -71,7 +90,7 @@ Page {
         indicator.visible = false;
         indicator.running = false;
         for(var i = 0; i < data.length; i++){
-            console.log(data[i]);
+            console.log(Code.obj2json(data[i]));
             listModel.append(data[i]);
         }
     }

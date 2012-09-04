@@ -12,18 +12,40 @@ Page {
     Component{
         id: delegate
         Rectangle{
-            height: labelText.height + 20
+            height: 170 * 162 / 300
             width: parent.width
-            radius: 5
+            color: "#8BB44E"
             Text{
                 id: labelText
                 anchors.right: parent.right
-                anchors.left: parent.left
                 anchors.top: parent.top
-                anchors.margins: 10
-                color: '#000'
+                width: parent.width - 170
+                color: '#fff'
+                horizontalAlignment: Text.AlignHCenter
+                text: cat_name
+            }
 
-                text: cat_id + ": " + cat_name + "(" + has_child + ")"
+            Text{
+                id: cntText
+                anchors.right: parent.right
+                anchors.top: labelText.bottom
+                anchors.bottom: parent.bottom
+                width: parent.width - 170
+                color: '#fff'
+                font.pixelSize: 50
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                text: number// + " " + (number % 10 > 4 || (number > 9 && number < 21) ? "акций": (number % 10 == 1 ? "акция": "акции")) + ")"
+            }
+
+            Image {
+                id: catImage
+                anchors.top: parent.top
+                anchors.left: parent.left
+                width: 170
+                height: 170 * 162 / 300
+                fillMode: Image.PreserveAspectFit
+                source: cat_image
             }
             MouseArea{
                 anchors.fill: parent
@@ -49,7 +71,7 @@ Page {
         delegate: delegate
         anchors.fill: parent
         model: listModel
-        spacing: 5
+        spacing: 1
     }
 
     BusyIndicator {

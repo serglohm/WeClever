@@ -26,6 +26,10 @@ PageStackWindow {
         pageStack.push(Qt.resolvedUrl("ActionPage.qml"), {tools: toolBarLayout, actionId: aid});
     }
 
+    function showMap(data){
+        pageStack.push(Qt.resolvedUrl("MapPage.qml"), {tools: toolBarLayout, actionPacket: data});
+    }
+
     ToolBarLayout {
         id: toolBarLayout
         ToolButton {

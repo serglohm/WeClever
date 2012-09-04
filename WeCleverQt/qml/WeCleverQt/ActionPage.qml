@@ -1,6 +1,8 @@
 import QtQuick 1.1
 import com.nokia.symbian 1.1
 
+import QtMobility.location 1.2
+
 import "code.js" as Code
 import "engine.js" as Engine
 
@@ -8,11 +10,13 @@ import "engine.js" as Engine
 Page {
     id: actionPage
     property int actionId: 0
+    property variant actionPacket: []
 
     Rectangle{
         anchors.fill: parent
-        color: '#F2797F'
+        color: "#8BB44E"
         Flickable{
+            id: mainFlick
             anchors.fill: parent
             contentHeight: productItem.height + 20
             flickableDirection: Flickable.VerticalFlick
@@ -30,7 +34,7 @@ Page {
                         priceText.height +
                         basketButton.height +
                         descriptionText.height +
-                        6*20
+                        6*20 + 200
 
                 Text{
                     id: cnameText
@@ -51,8 +55,7 @@ Page {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.margins: 10
                     smooth: true
-                    height: 200
-
+                    height: 162
                 }
                 Text{
                     id: annotationText
@@ -97,9 +100,16 @@ Page {
                     anchors.margins: 10
                     wrapMode: Text.WordWrap
                     color: '#333'
+                }                
+                Button {
+                    width: parent.width
+                    height: 30
+                    anchors.bottom: parent.bottom
+                    text: "click"
+                    onClicked: {
+                        showMap(actionPacket);
+                    }
                 }
-
-
             }
         }
     }
@@ -116,28 +126,40 @@ Page {
 
     function getActionCallback(data){
         console.log('----------- getActionCallback -----------');
-        console.log(data[0].name);
-        //console.log(Code.obj2json(data));
+        //console.log(data[0].name);
+        console.log(Code.obj2json(data));
 
         indicator.visible = false;
         indicator.running = false;
 
         cnameText.text = data[0].act_name;
+        var imageSource = data[0].act_image;
+        imageSource = imageSource.replace("med-1.jpg", "1-300x162.jpg");
+        itemImage.source = imageSource;
 
         var desc = data[0].conditions;
-        console.log('-------------------');
-        console.log(desc);
-        console.log('-------------------');
-
-        console.log('indexOf ' + desc.indexOf('</li>'));
 
         desc = desc.split('\\n').join('\n');
-        desc = desc.split('</li>').join('</li>');
-        desc = desc.split('<li>').join('<li>');
-        desc = desc.split('<ul>').join('<ul>');
-        desc = desc.split('</ul>').join('</ul>');
+        //desc = desc.replace('<li>', '<li style="margin: 0px; padding: 0px;">');
+        //desc = desc.replace('<ul>', '<ul style="margin: 0px; padding: 0px;">');
 
-        descriptionText.text = desc;
+        /*desc = desc.split('<ul>').join('<ul>');
+        desc = desc.split('</ul>').join('</ul>');
+        */
+        var testDesc = "<style>UL, LI{margin: 0px; padding-right: 0px;}</style>" + desc;
+
+        var tempArray = new Array();
+        descriptionText.text = testDesc;
+        for (var i = 0; i < data[0].packet.length; i++){
+            console.log(data[0].packet[i]);
+            var coords = data[0].packet[i].coords.split(',');
+            packet[i].lng = coords[0];
+            packet[i].lat = coords[1];
+            tempArray.push(data[0].packet[i]);
+        }
+        actionPacket = tempArray;
+
+
 
     }
 
