@@ -70,6 +70,15 @@ Page {
                         }
                     }
                 }
+                Component {
+                    id: mapImageComponent
+                    MapImage {
+                        source: "mapIcon.png"
+                        property double lat
+                        property double lon
+                        coordinate: Coordinate {latitude: lat; longitude: lon}
+                    }
+                }
 
                 Coordinate {
                     id: mapCenter
@@ -83,7 +92,7 @@ Page {
                    size.width: parent.width
                    anchors.top: parent.top//descriptionText.bottom
                    height: 200
-                   zoomLevel: 12
+                   zoomLevel: 14
                    center: mapCenter
                    //center: Coordinate {latitude: 53; longitude: 12}
                 }
@@ -147,7 +156,9 @@ Page {
             print("onStatusChanged actionPacket.length = " + actionPacket.length)
             for(var i = 0; i < actionPacket.length; i++){
                 console.log(Code.obj2json(actionPacket[i]));
-                mapImagesModel.append({lat: actionPacket[i][0], lng: actionPacket[i][1]})
+                var mapImage = mapImageComponent.createObject(mapId, {lon: actionPacket[i][0], lat: actionPacket[i][1]});
+                mapId.addMapObject(mapImage);
+//                mapImagesModel.append({lng: actionPacket[i][0], lat: actionPacket[i][1]})
             }
             if (actionPacket.length > 0) {
                 print("actionPacket.length > 0")
@@ -157,7 +168,7 @@ Page {
                       " lon = " + mapCenter.longitude)
             }
             console.log('----------------------------------');
-            mapId.addMapObject(mapIcons);
+            //mapId.addMapObject(mapIcons);
         }
     }
 

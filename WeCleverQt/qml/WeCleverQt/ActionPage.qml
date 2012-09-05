@@ -147,8 +147,8 @@ Page {
         /*desc = desc.split('<ul>').join('<ul>');
         desc = desc.split('</ul>').join('</ul>');
         */
-        var testDesc = "<style>UL, LI{margin: 0px; padding-right: 0px;}</style>" + desc;
-
+        var testDesc = "<style>UL,LI{margin-left: -10px; padding-right: 0px;}</style>" + desc;
+        //UL,
         var tempArray = new Array();
         descriptionText.text = testDesc;
         for (var i = 0; i < data[0].packet.length; i++){
