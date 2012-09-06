@@ -30,7 +30,7 @@ Page {
                 anchors.right: parent.right
                 anchors.margins: 10
                 height: cnameText.height +
-                        itemImage.height +
+                        itemImages.height +
                         annotationText.height +
                         priceText.height +
                         basketButton.height +
@@ -49,9 +49,9 @@ Page {
                     font.bold: true
                     font.pixelSize: 30
                 }
-                Image{
-                    id: itemImage
-                    fillMode: Image.PreserveAspectFit
+                FlickImages{
+                    id: itemImages
+                    //fillMode: Image.PreserveAspectFit
                     anchors.top: cnameText.bottom
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.margins: 10
@@ -61,7 +61,7 @@ Page {
                 Text{
                     id: annotationText
                     text: ""
-                    anchors.top: itemImage.bottom
+                    anchors.top: itemImages.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 10
@@ -134,9 +134,7 @@ Page {
         indicator.running = false;
 
         cnameText.text = data[0].act_name;
-        var imageSource = data[0].act_image;
-        imageSource = imageSource.replace("med-1.jpg", "1-300x162.jpg");
-        itemImage.source = imageSource;
+        itemImages.fillImages( data[0].act_images );
 
         var desc = data[0].conditions;
 
