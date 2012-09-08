@@ -68,8 +68,9 @@ function TabApplicationWindow(_params){
 	});	
 
 	var tab1 = Titanium.UI.createTab({
-		icon:'/images/tabs/KS_nav_ui.png',
+		icon:'/images/tabs/KS_nav_cat.png',
 		id:'tab1',
+		titleid: 'Акции',
 		window: masterContainerWindow
 	});
 	var cartView = new CartView({engine: engine, mdb: mdb, settings: settings});	
@@ -83,7 +84,7 @@ function TabApplicationWindow(_params){
 	cartWindow.add(cartContainerView);
 
 	var cartTab = Titanium.UI.createTab({
-		icon: '/images/tabs/KS_nav_ui.png',
+		icon: '/images/tabs/KS_nav_cart.png',
 		titleid: 'Корзина',
 		window: cartWindow
 	});
@@ -109,7 +110,7 @@ function TabApplicationWindow(_params){
 	favouritesContainerView.add(favouritesView);
 	favouritesWindow.add(favouritesContainerView);	
 	var favouritesTab = Titanium.UI.createTab({
-		icon: '/images/tabs/KS_nav_ui.png',
+		icon: '/images/tabs/KS_nav_fav.png',
 		titleid: 'Избранное',
 		window: favouritesWindow
 	});
@@ -118,14 +119,14 @@ function TabApplicationWindow(_params){
 
 	var historyView = new HistoryView({engine: engine, mdb: mdb, settings: settings});		
 	var historyWindow = self.createWindow({
-		title: 'Заказы'
+		title: 'Купоны'
 	});	
 	var historyContainerView = Ti.UI.createView({layout: "vertical"});
 	historyContainerView.add(historyView);
 	historyWindow.add(historyContainerView);	
 	var historyTab = Titanium.UI.createTab({
-		icon: '/images/tabs/KS_nav_ui.png',
-		titleid: 'Заказы',
+		icon: '/images/tabs/KS_fav_orders.png',
+		titleid: 'Купоны',
 		window: historyWindow
 	});
 	self.addTab(historyTab);	
@@ -138,6 +139,7 @@ function TabApplicationWindow(_params){
 
 	Ti.App.addEventListener('app:addItemToFavourites', function(e){
 		favouritesView.updateFavouritesItems();
+		Titanium.App.fireEvent('app:showAlert', {data: "" + e.data + " добавленно в избранное..."});
 	});
 
 	Ti.App.addEventListener('app:addItemToCart', function(e){
@@ -241,6 +243,45 @@ function TabApplicationWindow(_params){
 			historyTab.open(tempWindow, {animated: true});
 		}
 	});	
+	
+	//---------------------------------------------------------------
+	
+	var alertWin = Titanium.UI.createWindow({
+		height: 100,
+		width: 280,
+		bottom: 110,
+		borderRadius: 10
+	});
+	
+	var alertView = Titanium.UI.createView({
+		backgroundColor:'#000',
+		opacity: 0.8,
+		height: 100,
+		width: 280,
+		borderRadius: 10
+	});
+	
+	var alertLabel = Titanium.UI.createLabel({
+		color: '#fff',
+		font: {fontSize: 13},
+		textAlign: 'center',
+		left: '10dp', right: '10dp', top: '10dp', botom: '10dp'
+	});
+	alertLabel.verticalAlign = Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER;
+	alertWin.add(alertView);
+	alertWin.add(alertLabel);
+	
+	//Titanium.App.fireEvent('app:showAlert',{data: ""});
+	
+	Titanium.App.addEventListener('app:showAlert', function(e)
+	{
+		alertLabel.text = e.data;
+		alertWin.open();
+		setTimeout(function()
+		{
+			alertWin.close({opacity: 0, duration: 500});
+		}, 2000);
+	});		
 	
 	return self; 
 };

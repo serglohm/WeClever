@@ -36,40 +36,88 @@ function CategoryView(_params) {
 		var newRow = Ti.UI.createTableViewRow({
 				categoryID: _rowdata.cat_id,
 				className: 'categoryRowDesc',
-				height: Ti.UI.SIZE
+				height: '105dp',
 		});
 		newRow.backgroundColor = 'transparent';
 		newRow.selectedBackgroundColor = '#fff';
 
-		var bckView = Ti.UI.createView({left: 5, right: 5, bottom: 5,
-				borderRadius: 5,
-				layout: 'vertical',
-				height: Ti.UI.SIZE,
-				backgroundColor: '#fff'
+		var bckView = Ti.UI.createView({left: 5, right: 5, top: '5dp',
+				height: '100dp',
+				categoryID: _rowdata.cat_id,
+				borderRadius: '5dp',
+				backgroundColor: '#7fc14c'
 			});
 		
+		//bckView.backgroundImage = '/iphone/itemBg.png';
 		bckView.selectedBackgroundColor = '#fff';
 		bckView.backgroundSelectedColor = '#0f0';	
 		bckView.backgroundFocusedColor = '#f00';
+		
+		var shadowColor = '#333';
+		var shadowOffset = {x: 0, y: -1};
+	
+		var imageBgView = Ti.UI.createView({
+			left: '0dp', top: '0dp', height: '100dp', width: '180dp',
+			backgroundColor: '#fff',
+			borderRadius: 0,
+			categoryID: _rowdata.cat_id
+		});
+		
+		var imageView = Ti.UI.createImageView({	
+			center: '45dp', width: '190dp',
+			image: _rowdata.cat_image,			
+			categoryID: _rowdata.cat_id
+		});
+
+		imageBgView.add(imageView);
+		bckView.add(imageBgView);
+		
+		newRow.add(bckView);	
+	
+		var labelsView = Ti.UI.createView({
+			width: '120dp',
+			right: 0, //backgroundColor: '#fff',
+			categoryID: _rowdata.cat_id,
+			center: {x: '245dp', y: '50dp'},
+			layout: 'vertical',
+			height: Ti.UI.SIZE
+		});
 	
 		var titleLabel = Ti.UI.createLabel({
 			text: _rowdata.cat_name,
-			categoryID: _rowdata.cat_id,			
-			top: '10dp', left: '10dp', right: '10dp',
+			categoryID: _rowdata.cat_id,	
+			textAlign: 'center',
+			font: {fontSize: '13dp', fontWeight: 'bold', fontFamily: 'Arial'},
+			shadowColor: shadowColor,
+			shadowOffset: shadowOffset,
+			color: "#fff"				
+		});
+		labelsView.add(titleLabel);
+				
+		var numberLabel = Ti.UI.createLabel({
+			text: _rowdata.number,
+			categoryID: _rowdata.cat_id,	
+			textAlign: 'center',
+			font: {fontSize: '35dp', fontWeight: 'bold', fontFamily: 'Arial'},
+			shadowColor: shadowColor,
+			shadowOffset: shadowOffset,
+			color: "#fff"	
+		});
+		labelsView.add(numberLabel);	
+	
+		var actionLabel = Ti.UI.createLabel({
+			text: (_rowdata.number % 10 > 4 || (_rowdata.number > 9 && _rowdata.number < 21) ? "акций": (_rowdata.number % 10 == 1 ? "акция": "акции")),
+			categoryID: _rowdata.cat_id,	
+			textAlign: 'center',		
 			font: {fontSize: '15dp', fontWeight: 'bold', fontFamily: 'Arial'},
-			color: "#333"			
+			color: "#fff",
+			shadowColor: shadowColor,
+			shadowOffset: shadowOffset
+			
 		});
-		bckView.add(titleLabel);
-
-		var imageView = Ti.UI.createImageView({	
-			left: '10dp', right: '10dp', bottom: '10dp',
-			image: _rowdata.cat_image,
-			categoryID: _rowdata.cat_id
-		});
-		bckView.add(imageView);
-		Ti.API.log(_rowdata);
+		labelsView.add(actionLabel);	
 		
-		newRow.add(bckView);	
+		bckView.add(labelsView);	
 			
 		_data.push(newRow);
 		categoryData[_rowdata.cat_id + ""] = _rowdata;

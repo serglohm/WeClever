@@ -36,26 +36,31 @@ function ItemsView(_params) {
 		var newRow = Ti.UI.createTableViewRow({
 				itemID: _rowdata.act_id,
 				className: 'itemRowDp',
-				height: '100dp'
+				height: '175dp'
 		});
 		newRow.backgroundColor = 'transparent';
 		newRow.selectedBackgroundColor = '#fff';
 	
 		var bckView = Ti.UI.createView({left: '5dp', top: '0dp', right: '5dp', bottom: '5dp',
-			backgroundColor: '#fff',
+			backgroundColor: '#7fc14c',
 			itemID: _rowdata.act_id,
 			borderRadius: '5dp'
+			//backgroundImage: '/iphone/item2Bg.png'
 		});
 		bckView.backgroundFocusedColor = '#fff';
 		bckView.backgroundSelectedColor = '#fff';	
 			
+		var shadowColor = '#333';
+		var shadowOffset = {x: 0, y: -1};	
+			
 		var titleLabel = Ti.UI.createLabel({
 			text: _rowdata.act_name,
 			itemID: _rowdata.act_id,			
-			top: '10dp', left: '80dp', right: '10dp',
-			bottom: '10dp',
-			font: {fontSize: '15dp', fontWeight: 'bold', fontFamily: 'Arial'},
-			color: "#333"			
+			width: '300dp', height: '60dp', center: {x: '155dp', y: '35dp'},
+			font: {fontSize: '13dp', fontWeight: 'bold', fontFamily: 'Arial'},
+			color: "#fff",
+			shadowColor: shadowColor,
+			shadowOffset: shadowOffset
 		});
 		bckView.add(titleLabel);
 		/*
@@ -68,15 +73,56 @@ function ItemsView(_params) {
 		});
 		newRow.add(annotationLabel);
 		*/
+		
+		var imageBgView = Ti.UI.createView({
+			left: '0dp', bottom: '0dp',
+			width: '180dp', height: '100dp',
+			itemID: _rowdata.act_id,			
+		});
 		var img = Ti.UI.createImageView({
-			center: '50dp', left: '5dp',
-			width: '70dp',
+			left: '0dp', top: '0dp',
+			width: '185dp',
 			itemID: _rowdata.act_id,
 			image: _rowdata.act_image
 		});
 		img.defaultImage = '/iphone/applelogo.png';
-		bckView.add(img);
+		imageBgView.add(img);
+		bckView.add(imageBgView);
 		
+		var labelView = Ti.UI.createView({
+			width: '140dp', height: Ti.UI.SIZE,
+			center: {x: '245dp', y: '120dp'},
+			layout: 'vertical'
+		});
+		
+		var discountLabel = Ti.UI.createLabel({
+			itemID: _rowdata.act_id,
+			text: 'Скидка: ' + _rowdata.packet[0].discount + '%',
+			color: "#fff", font: {fontWeight: 'bold', fontSize: '15dp', fontFamily: 'Arial'},
+			shadowColor: shadowColor,
+			shadowOffset: shadowOffset			
+		});
+		labelView.add(discountLabel);
+		var descPriceLabel = Ti.UI.createLabel({
+			itemID: _rowdata.act_id,
+			text: 'Цена: ' + _rowdata.packet[0].discountprice + ' руб.',
+			color: "#fff", font: {fontWeight: 'bold', fontSize: '15dp', fontFamily: 'Arial'},
+			shadowColor: shadowColor,
+			shadowOffset: shadowOffset			
+		});
+		labelView.add(descPriceLabel);
+		var couponsSoldLabel = Ti.UI.createLabel({
+			itemID: _rowdata.act_id,
+			text: 'Продано: ' + _rowdata.packet[0].coupons_sold,
+			color: "#fff", font: {fontWeight: 'bold', fontSize: '15dp', fontFamily: 'Arial'},
+			shadowColor: shadowColor,
+			shadowOffset: shadowOffset			
+		});
+		labelView.add(couponsSoldLabel);
+		
+		
+		
+		bckView.add(labelView);
 		newRow.add(bckView);
 		
 		_data.push(newRow);
@@ -111,7 +157,7 @@ function ItemsView(_params) {
 	actInd.message = 'Загрузка...';
 	self.add(actInd);	
 	
-	engine.getData("/iphone_app/AppDataActionsPages/" + categoryID + "/10/0/1", self.categoryCallback);
+	engine.getData("/iphone_app/AppDataActionsPages2/" + categoryID + "/1000/0/1", self.categoryCallback);
 	
 	
 	

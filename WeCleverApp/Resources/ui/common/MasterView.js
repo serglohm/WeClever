@@ -25,7 +25,7 @@ function MasterView(_params) {
 		var newRow = Ti.UI.createTableViewRow({
 				data: _rowdata.data,
 				className: 'itemRowDp',
-				height: '50dp'
+				height: '80dp'
 		});
 		newRow.backgroundColor = 'transparent';
 		newRow.selectedBackgroundColor = '#fff';

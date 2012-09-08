@@ -6,9 +6,12 @@ function MEngine(){
 MEngine.prototype.getUrlStart = function(){    
 	return "http://www.weclever.ru";
 };
+
+MEngine.prototype.getData = function(uri, callback, errorcallback){
+	return this.getUrlData(this.getUrlStart() + uri, callback, errorcallback);
+};
 	
-MEngine.prototype.getData = function(uri, callback, errorcallback){    
-          
+MEngine.prototype.getUrlData = function(url, callback, errorcallback){     
     var xhr = Titanium.Network.createHTTPClient();    
     xhr.onerror = function(e){
     	if(errorcallback){
@@ -17,7 +20,7 @@ MEngine.prototype.getData = function(uri, callback, errorcallback){
     	Ti.API.log('onerror: ' + JSON.stringify(e));
    	};
      
-    var cmdUrl = this.getUrlStart() + uri;
+    var cmdUrl = url;
     
     Ti.API.log("cmdUrl: " + cmdUrl); 
      
@@ -33,8 +36,7 @@ MEngine.prototype.getData = function(uri, callback, errorcallback){
     xhr.send();
 };
 
-MEngine.prototype.postRawData = function(uri, params, callback, errorcallback){    
-          
+MEngine.prototype.postRawData = function(uri, params, callback, errorcallback){           
     var xhr = Titanium.Network.createHTTPClient();    
     xhr.onerror = function(e){
     	if(errorcallback){
