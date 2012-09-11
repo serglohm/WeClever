@@ -32,6 +32,29 @@ function MDb(_params){
 		db.execute("DROP TABLE IF EXISTS order_items");
 	}
 	
+	db.execute("DROP TABLE IF EXISTS actions");
+	db.execute("DROP TABLE IF EXISTS packets");
+	db.execute("CREATE TABLE IF NOT EXISTS actions (act_id INTEGER, \
+   														act_name TEXT, \
+   														act_image  TEXT, \
+   														coupons_max INTEGER, \
+   														coupons_bought INTEGER, \
+   														date_sell_start NUMERIC, \
+   														date_sell_end NUMERIC \
+    												)");
+    												
+    db.execute("CREATE TABLE IF NOT EXISTS packets (packet_id INTEGER, \
+    										    		act_id INTEGER, \
+												        plat NUMERIC, \
+												        plong NUMERIC, \
+												        coupons_max INTEGER, \
+												        coupons_sold INTEGER, \
+												        discountprice NUMERIC, \
+												        discount NUMERIC, \
+												        econ NUMERIC, \
+												        pricecoupon NUMERIC \
+   													 )");						
+	
 	
     db.execute("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY AUTOINCREMENT, \
                                                                     order_number INTEGER, \
@@ -69,7 +92,7 @@ function MDb(_params){
 	return this;
 };
 
-MDb.prototype.open = function(itemId) {
+MDb.prototype.open = function() {
 	this.db = Ti.Database.open(this.dbName);
 };
 
@@ -262,5 +285,31 @@ MDb.prototype.getItemCountInCart = function(itemId) {
     this.db.close();
     return result;
 };
+
+
+MDb.prototype.getAllActions = function() {
+    this.open();
+    var model = [];
+    var rows = this.db.execute("SELECT act_id, act_name, act_image, coupons_max, coupons_bought, date_sell_start, date_sell_end FROM actions");
+
+
+       while (rows.isValidRow()){
+               var rowData = {};
+               var fields_str = "act_id, act_name, act_image, coupons_max, coupons_bought, date_sell_start, date_sell_end";            
+               var field_names = fields_str.split(", ");
+        for(var k = 0; k < field_names.length; k++){
+               rowData[field_names[k]] = rows.fieldByName(field_names[k]);
+        }
+               
+        model.push(rowData);
+        rows.next();
+    }
+       rows.close();
+
+    this.db.close();
+    return model;
+    
+};
+
 
 module.exports = MDb; 

@@ -62,21 +62,10 @@ function ItemView(_params) {
 	});
 	view.add(scrollImageView);
 
-	var priceLabel = Ti.UI.createLabel({	
-		font: {fontSize: '20dp', fontFamily: 'Arial'},
-		color: '#fff',
-		left: '10dp', right: '10dp',
-		text: ''
-	});
-	priceLabel.shadowColor = '#333';
-	priceLabel.shadowOffset = {x: 0, y: -1};	
-	view.add(priceLabel);
-
 	var buttonsView = Ti.UI.createView({
-      left: 0, top: 0, right: 0,
-      
-      backgroundColor: "#7fc14c",
-      height: '60dp'
+		left: 0, top: 0, right: 0,
+		backgroundColor: "#7fc14c",
+		height: '60dp'
     });
 	
 	var cartButton = Ti.UI.createButton({	
@@ -87,10 +76,10 @@ function ItemView(_params) {
 		color: '#fff',
 		title: ' Купить'
 	});
-	cartButton.textAlign = 'left';
-	
+	cartButton.textAlign = 'center';
+	cartButton.backgroundLeftCap = 10;
+	cartButton.backgroundTopCap = 4;
 	cartButton.backgroundImage = '/iphone/buyBtn.png';
-	
 	cartButton.addEventListener('click', function(e){
 		mdb.addItemToCart(itemID, itemData.act_name, itemData.act_images[0]);
 
@@ -112,13 +101,74 @@ function ItemView(_params) {
 	favouriteButton.addEventListener('click', function(e){
 		mdb.addItemToFavourites(itemID, itemData.act_name, itemData.cat_image);
 
-		Ti.App.fireEvent('app:addItemToFavourites', {data: itemData.act_name});
-		
+		Ti.App.fireEvent('app:addItemToFavourites', {data: itemData.act_name});	
 	});	
 	
+	var mapButton = Ti.UI.createButton({	
+		font: {fontSize: '20dp', fontFamily: 'Arial'},
+		top: '10dp',
+		width: '50dp', left: '10dp', height: '44dp',
+		backgroundImage : '/iphone/favBtn.png',
+		color: '#555',
+		title: ''
+	});	
+	mapButton.addEventListener('click', function(e){
+		Ti.API.log("mapButton click");
+		Ti.App.fireEvent('app:showMap', {data: itemData});	
+	});	
+	
+	buttonsView.add(mapButton);
 	buttonsView.add(cartButton);
 	buttonsView.add(favouriteButton);
+	
+	
 	view.add(buttonsView);	
+
+
+	var priceLabel = Ti.UI.createLabel({	
+		font: {fontSize: '20dp', fontFamily: 'Arial'},
+		color: '#fff',
+		left: '10dp', right: '10dp',
+		text: ''
+	});
+	priceLabel.shadowColor = '#333';
+	priceLabel.shadowOffset = {x: 0, y: -1};	
+	view.add(priceLabel);
+
+
+
+
+	var econLabel = Ti.UI.createLabel({	
+		font: {fontSize: '15dp', fontFamily: 'Arial'},
+		color: '#fff',
+		left: '10dp', right: '10dp',
+		text: ''
+	});
+	econLabel.shadowColor = '#333';
+	econLabel.shadowOffset = {x: 0, y: -1};	
+	view.add(econLabel);
+
+	var econLabel = Ti.UI.createLabel({	
+		font: {fontSize: '15dp', fontFamily: 'Arial'},
+		color: '#fff',
+		left: '10dp', right: '10dp',
+		text: ''
+	});
+	econLabel.shadowColor = '#333';
+	econLabel.shadowOffset = {x: 0, y: -1};	
+	view.add(econLabel);
+
+	var couponsBoughtLabel = Ti.UI.createLabel({	
+		font: {fontSize: '15dp', fontFamily: 'Arial'},
+		color: '#fff',
+		left: '10dp', right: '10dp',
+		text: ''
+	});
+	couponsBoughtLabel.shadowColor = '#333';
+	couponsBoughtLabel.shadowOffset = {x: 0, y: -1};	
+	view.add(couponsBoughtLabel);
+ 
+
 
 	var annotaionLabel = Ti.UI.createLabel({	
 		font: {fontSize: '14dp', fontFamily: 'Arial'},
@@ -154,10 +204,9 @@ function ItemView(_params) {
 		titleLabel.text = itemData.act_name;
 		
 		var t = itemData.conditions + " ";		
-		Ti.API.log(t);
-		Ti.API.log("t \n: " + t.indexOf("\n"));
-		
-		
+
+		Ti.API.log(JSON.stringify(itemData));
+			
 		var f = 0;
 		var newstring = t.replace(/\n/g, "");
 		Ti.API.log("newstring \n: " + newstring.indexOf("\n"));
@@ -184,8 +233,9 @@ function ItemView(_params) {
 		if(cnt){cartCountLabel.show();} else {cartCountLabel.hide();}
 		 
 		cartButton.title = 'В корзину';
-		priceLabel.text = 'Цена: ' + itemData.packet[0].discountprice + ' руб.  Скидка: ' + itemData.packet[0].discount + '%';
-		
+		priceLabel.text = itemData.packet[0].discountprice + ' руб.';
+		econLabel.text = '  Скидка: ' + itemData.packet[0].discount + '% Старая цена: ' + itemData.packet[0].pricecoupon + ' руб.  Экономия: ' + itemData.packet[0].econ + ' руб.';
+		couponsBoughtLabel.text = (parseInt(itemData.packet[0].discountprice) > 0? 'Уже купили: ': 'Уже получили: ') + itemData.coupons_bought;
 		var image_path = itemData.act_images[0];
 		var images_arr = [];
 		

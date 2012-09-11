@@ -8,7 +8,8 @@ function TabApplicationWindow(_params){
 		HistoryItemsView = require('ui/common/HistoryItemsView'),
 		OrderView = require('ui/common/OrderView'),
 		ItemsView = require('ui/common/ItemsView'),
-		ItemView = require('ui/common/ItemView');
+		ItemView = require('ui/common/ItemView'),
+		ActionMapView = require('ui/common/ActionMapView');
 			
 	var engine = _params.engine;	
 	var mdb = _params.mdb;
@@ -89,7 +90,7 @@ function TabApplicationWindow(_params){
 		window: cartWindow
 	});
 
-	cartTab
+	engine.loadAllActionsToDb({mdb: mdb});
 
 	var cartCnt = mdb.cartItemsCount();
 	if (cartCnt > 0){
@@ -165,6 +166,18 @@ function TabApplicationWindow(_params){
 		var tempView = new ItemView({engine: engine, mdb: mdb, itemID: e.data[0], settings: settings});			
 		var tempWindow = self.createWindow({
 			//title: e.data[1].act_name
+		});	
+		var tempContainerView = Ti.UI.createView({layout: "vertical"});
+		tempContainerView.add(tempView);
+		tempWindow.add(tempContainerView);
+		tab1.open(tempWindow, {animated:true});		
+	});
+	
+	Ti.App.addEventListener('app:showMap', function(e) {
+		Ti.API.log("app:showMap");
+		var tempView = new ActionMapView({engine: engine, mdb: mdb, settings: settings, item: e.data});			
+		var tempWindow = self.createWindow({
+			title: "Карта"
 		});	
 		var tempContainerView = Ti.UI.createView({layout: "vertical"});
 		tempContainerView.add(tempView);
